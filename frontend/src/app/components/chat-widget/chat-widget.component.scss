@@ -1,0 +1,315 @@
+$primary-color: #fa4616;
+$secondary-color: #0021a5;
+
+.chat-widget {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+
+  .chat-toggle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+    position: relative;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    .unread-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #dc3545;
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .chat-panel {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    width: 360px;
+    height: 480px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    background: #fafafa;
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .back-btn,
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: #666;
+
+      &:hover {
+        color: #333;
+      }
+    }
+
+    .chat-user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+      margin-left: 0.5rem;
+
+      .user-avatar,
+      .user-avatar-placeholder {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+      }
+
+      .user-avatar {
+        object-fit: cover;
+      }
+
+      .user-avatar-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, $primary-color, $secondary-color);
+        color: white;
+        font-weight: 600;
+      }
+
+      strong {
+        display: block;
+        font-size: 0.875rem;
+      }
+
+      .listing-title {
+        font-size: 0.7rem;
+        color: #666;
+      }
+    }
+  }
+
+  .chats-list {
+    flex: 1;
+    overflow-y: auto;
+
+    .empty-state {
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #999;
+
+      span {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        margin: 0 0 0.25rem;
+        font-weight: 600;
+        color: #666;
+      }
+
+      small {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .chat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #f9f9f9;
+    }
+
+    .user-avatar,
+    .user-avatar-placeholder {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .user-avatar {
+      object-fit: cover;
+    }
+
+    .user-avatar-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, $primary-color, $secondary-color);
+      color: white;
+      font-weight: 600;
+    }
+
+    .chat-info {
+      flex: 1;
+      min-width: 0;
+
+      .chat-top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        strong {
+          font-size: 0.875rem;
+        }
+
+        .chat-time {
+          font-size: 0.625rem;
+          color: #999;
+        }
+      }
+
+      .listing-name {
+        font-size: 0.7rem;
+        color: $primary-color;
+        display: block;
+      }
+
+      .last-message {
+        margin: 0.25rem 0 0;
+        font-size: 0.75rem;
+        color: #666;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .unread-count {
+      background: $primary-color;
+      color: white;
+      font-size: 0.625rem;
+      font-weight: 700;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .message {
+    max-width: 80%;
+    align-self: flex-start;
+
+    &.own {
+      align-self: flex-end;
+
+      .message-content {
+        background: linear-gradient(135deg, $primary-color, $secondary-color);
+        color: white;
+      }
+    }
+
+    .message-content {
+      background: #f0f0f5;
+      padding: 0.5rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      word-wrap: break-word;
+    }
+
+    .message-time {
+      font-size: 0.625rem;
+      color: #999;
+      margin-top: 0.125rem;
+      display: block;
+    }
+  }
+
+  .message-input {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #eee;
+    background: #fafafa;
+
+    input {
+      flex: 1;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      outline: none;
+
+      &:focus {
+        border-color: $primary-color;
+      }
+    }
+
+    button {
+      background: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:not(:disabled):hover {
+        background: darken($primary-color, 10%);
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <a routerLink="/" class="logo">
+      <span class="logo-icon">🐊</span>
+      <span class="logo-text">UF Market</span>
+    </a>
+
+    <div class="nav-actions">
+      @if (authService.isLoggedIn()) {
+        <a routerLink="/create-listing" class="btn-create">
+          <span class="plus-icon">+</span>
+          <span>Sell</span>
+        </a>
+
+        <app-notification-dropdown></app-notification-dropdown>
+
+        <div class="profile-menu-container" (clickOutside)="closeProfileMenu()">
+          <button class="profile-btn" (click)="toggleProfileMenu()">
+            @if (authService.currentUser()?.profile_image) {
+              <img [src]="authService.currentUser()?.profile_image" alt="Profile" class="profile-img">
+            } @else {
+              <div class="profile-placeholder">
+                {{ authService.currentUser()?.first_name?.charAt(0) }}{{ authService.currentUser()?.last_name?.charAt(0) }}
+              </div>
+            }
+          </button>
+
+          @if (showProfileMenu) {
+            <div class="profile-dropdown">
+              <div class="dropdown-header">
+                <strong>{{ authService.currentUser()?.first_name }} {{ authService.currentUser()?.last_name }}</strong>
+                <span>{{ authService.currentUser()?.email }}</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a routerLink="/profile" class="dropdown-item" (click)="closeProfileMenu()">
+                <span>👤</span> My Profile
+              </a>
+              <a routerLink="/profile" [queryParams]="{tab: 'listings'}" class="dropdown-item" (click)="closeProfileMenu()">
+                <span>📦</span> My Listings
+              </a>
+              <a routerLink="/settings" class="dropdown-item" (click)="closeProfileMenu()">
+                <span>⚙️</span> Settings
+              </a>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item logout" (click)="logout()">
+                <span>🚪</span> Logout
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <a routerLink="/login" class="btn-login">Login</a>
+        <a routerLink="/register" class="btn-register">Sign Up</a>
+      }
+    </div>
+  </div>
+</nav>

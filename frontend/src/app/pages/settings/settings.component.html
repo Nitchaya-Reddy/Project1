@@ -1,0 +1,180 @@
+<div class="settings-page">
+  <div class="settings-header">
+    <div class="header-content">
+      <a routerLink="/profile" class="back-link">← Back to Profile</a>
+      <h1>Settings</h1>
+      <p>Manage your account settings and preferences</p>
+    </div>
+  </div>
+
+  <div class="settings-content">
+    <nav class="settings-nav">
+      <button 
+        class="nav-item"
+        [class.active]="activeSection() === 'profile'"
+        (click)="setSection('profile')">
+        <span class="icon">👤</span>
+        Profile Information
+      </button>
+      <button 
+        class="nav-item"
+        [class.active]="activeSection() === 'password'"
+        (click)="setSection('password')">
+        <span class="icon">🔒</span>
+        Change Password
+      </button>
+      <button 
+        class="nav-item"
+        [class.active]="activeSection() === 'account'"
+        (click)="setSection('account')">
+        <span class="icon">⚙️</span>
+        Account
+      </button>
+    </nav>
+
+    <div class="settings-panel">
+      @if (successMessage()) {
+        <div class="alert success">
+          ✓ {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="alert error">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (activeSection() === 'profile') {
+        <div class="panel-content">
+          <h2>Profile Information</h2>
+          <p class="panel-description">Update your personal details</p>
+
+          <form (ngSubmit)="updateProfile()">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input 
+                type="text"
+                id="name"
+                [value]="formData().name"
+                (input)="updateFormField('name', $event)"
+                placeholder="Your full name"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input 
+                type="email"
+                id="email"
+                [value]="user()?.email"
+                disabled>
+              <span class="field-hint">Email cannot be changed</span>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input 
+                type="tel"
+                id="phone"
+                [value]="formData().phone"
+                (input)="updateFormField('phone', $event)"
+                placeholder="(352) 555-0123">
+            </div>
+
+            <div class="form-group">
+              <label for="bio">Bio</label>
+              <textarea 
+                id="bio"
+                [value]="formData().bio"
+                (input)="updateFormField('bio', $event)"
+                placeholder="Tell others a bit about yourself..."
+                rows="4"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-save" [disabled]="isSaving()">
+                {{ isSaving() ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      @if (activeSection() === 'password') {
+        <div class="panel-content">
+          <h2>Change Password</h2>
+          <p class="panel-description">Update your password to keep your account secure</p>
+
+          <form (ngSubmit)="changePassword()">
+            <div class="form-group">
+              <label for="currentPassword">Current Password</label>
+              <input 
+                type="password"
+                id="currentPassword"
+                [value]="passwordData().currentPassword"
+                (input)="updatePasswordField('currentPassword', $event)"
+                placeholder="Enter current password"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword">New Password</label>
+              <input 
+                type="password"
+                id="newPassword"
+                [value]="passwordData().newPassword"
+                (input)="updatePasswordField('newPassword', $event)"
+                placeholder="Enter new password"
+                required>
+              <span class="field-hint">Minimum 6 characters</span>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input 
+                type="password"
+                id="confirmPassword"
+                [value]="passwordData().confirmPassword"
+                (input)="updatePasswordField('confirmPassword', $event)"
+                placeholder="Confirm new password"
+                required>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-save" [disabled]="isSaving()">
+                {{ isSaving() ? 'Updating...' : 'Update Password' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      @if (activeSection() === 'account') {
+        <div class="panel-content">
+          <h2>Account Settings</h2>
+          <p class="panel-description">Manage your account preferences</p>
+
+          <div class="account-info">
+            <div class="info-item">
+              <span class="label">Account Type</span>
+              <span class="value">{{ user()?.is_admin ? 'Administrator' : 'Student' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Member Since</span>
+              <span class="value">{{ user()?.created_at | date:'MMMM yyyy' }}</span>
+            </div>
+          </div>
+
+          <div class="danger-zone">
+            <h3>Session</h3>
+            <p>Sign out of your account on this device</p>
+            <button class="btn-logout" (click)="logout()">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

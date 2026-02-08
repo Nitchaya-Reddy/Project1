@@ -1,0 +1,126 @@
+<div class="listing-detail-page">
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  } @else if (listing()) {
+    <div class="listing-container">
+      <!-- Image Gallery -->
+      <div class="gallery-section">
+        <div class="main-image">
+          <img [src]="currentImage" [alt]="listing()!.title">
+          @if (listing()!.status === 'sold') {
+            <div class="sold-overlay">SOLD</div>
+          }
+        </div>
+        
+        @if (listing()!.images && listing()!.images.length > 1) {
+          <div class="thumbnail-list">
+            @for (image of listing()!.images; track image.id; let i = $index) {
+              <button 
+                class="thumbnail" 
+                [class.active]="i === selectedImageIndex()"
+                (click)="selectImage(i)">
+                <img [src]="getImageUrl(image.image_url)" [alt]="'Image ' + (i + 1)">
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Details Section -->
+      <div class="details-section">
+        <div class="listing-header">
+          <div class="category-tag">{{ listing()!.category?.name }}</div>
+          <h1>{{ listing()!.title }}</h1>
+          <div class="price">${{ listing()!.price | number:'1.2-2' }}</div>
+        </div>
+
+        <div class="meta-info">
+          <span class="meta-item">
+            📍 {{ listing()!.location || 'UF Campus' }}
+          </span>
+          <span class="meta-item">
+            👁️ {{ listing()!.views }} views
+          </span>
+          <span class="meta-item">
+            📅 {{ formatDate(listing()!.created_at) }}
+          </span>
+        </div>
+
+        @if (listing()!.condition) {
+          <div class="condition">
+            <strong>Condition:</strong> {{ getConditionLabel(listing()!.condition) }}
+          </div>
+        }
+
+        <div class="description">
+          <h3>Description</h3>
+          <p>{{ listing()!.description || 'No description provided.' }}</p>
+        </div>
+
+        <!-- Seller Info -->
+        <div class="seller-card">
+          <div class="seller-info">
+            @if (listing()!.seller?.profile_image) {
+              <img [src]="listing()!.seller.profile_image" class="seller-avatar" alt="Seller">
+            } @else {
+              <div class="seller-avatar-placeholder">
+                {{ listing()!.seller?.first_name?.charAt(0) }}{{ listing()!.seller?.last_name?.charAt(0) }}
+              </div>
+            }
+            <div class="seller-details">
+              <strong>{{ listing()!.seller?.first_name }} {{ listing()!.seller?.last_name }}</strong>
+              <span>Member since {{ formatDate(listing()!.seller?.created_at || '') }}</span>
+            </div>
+          </div>
+          
+          <a [routerLink]="['/user', listing()!.seller_id]" class="view-profile-btn">
+            View Profile
+          </a>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          @if (isOwner) {
+            <a [routerLink]="['/listing', listing()!.id, 'edit']" class="btn btn-secondary">
+              ✏️ Edit Listing
+            </a>
+          } @else if (listing()!.status === 'active') {
+            <button class="btn btn-primary" (click)="toggleMessageForm()">
+              💬 Message Seller
+            </button>
+          }
+        </div>
+
+        <!-- Message Form -->
+        @if (showMessageForm) {
+          <div class="message-form">
+            <h4>Send a message to the seller</h4>
+            <textarea 
+              [(ngModel)]="messageText" 
+              placeholder="Hi! I'm interested in this item..."
+              rows="3"
+              [disabled]="isSendingMessage"></textarea>
+            <div class="form-actions">
+              <button 
+                class="btn btn-primary" 
+                (click)="sendMessage()"
+                [disabled]="isSendingMessage || !messageText.trim()">
+                @if (isSendingMessage) {
+                  Sending...
+                } @else {
+                  Send Message
+                }
+              </button>
+              <button class="btn btn-cancel" (click)="showMessageForm = false">
+                Cancel
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

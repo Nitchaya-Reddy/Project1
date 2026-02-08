@@ -1,0 +1,104 @@
+@if (authService.isLoggedIn()) {
+  <div class="chat-widget" [class.open]="isOpen()">
+    <!-- Toggle Button -->
+    <button class="chat-toggle" (click)="toggle()">
+      @if (isOpen()) {
+        <span>×</span>
+      } @else {
+        <span>💬</span>
+        @if (getTotalUnread() > 0) {
+          <span class="unread-badge">{{ getTotalUnread() }}</span>
+        }
+      }
+    </button>
+
+    <!-- Chat Panel -->
+    @if (isOpen()) {
+      <div class="chat-panel">
+        @if (activeChat()) {
+          <!-- Chat Messages View -->
+          <div class="chat-header">
+            <button class="back-btn" (click)="backToList()">←</button>
+            <div class="chat-user-info">
+              @if (getOtherUser(activeChat()!).profile_image) {
+                <img [src]="getOtherUser(activeChat()!).profile_image" class="user-avatar">
+              } @else {
+                <div class="user-avatar-placeholder">
+                  {{ getOtherUser(activeChat()!).first_name?.charAt(0) }}
+                </div>
+              }
+              <div>
+                <strong>{{ getOtherUser(activeChat()!).first_name }}</strong>
+                <span class="listing-title">{{ activeChat()!.listing?.title }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="messages-container" #messagesContainer>
+            @for (message of chatService.messages(); track message.id) {
+              <div class="message" [class.own]="isOwnMessage(message)">
+                <div class="message-content">
+                  {{ message.content }}
+                </div>
+                <span class="message-time">{{ message.created_at | date:'shortTime' }}</span>
+              </div>
+            }
+          </div>
+
+          <div class="message-input">
+            <input 
+              type="text" 
+              [(ngModel)]="newMessage" 
+              placeholder="Type a message..."
+              (keyup.enter)="sendMessage()"
+              [disabled]="isLoading()">
+            <button (click)="sendMessage()" [disabled]="isLoading() || !newMessage.trim()">
+              Send
+            </button>
+          </div>
+        } @else {
+          <!-- Chats List View -->
+          <div class="chat-header">
+            <h3>Messages</h3>
+            <button class="close-btn" (click)="close()">×</button>
+          </div>
+
+          <div class="chats-list">
+            @if (chatService.chats().length === 0) {
+              <div class="empty-state">
+                <span>💬</span>
+                <p>No conversations yet</p>
+                <small>Start by contacting a seller!</small>
+              </div>
+            } @else {
+              @for (chat of chatService.chats(); track chat.id) {
+                <button class="chat-item" (click)="openChat(chat)">
+                  @if (getOtherUser(chat).profile_image) {
+                    <img [src]="getOtherUser(chat).profile_image" class="user-avatar">
+                  } @else {
+                    <div class="user-avatar-placeholder">
+                      {{ getOtherUser(chat).first_name?.charAt(0) }}
+                    </div>
+                  }
+                  <div class="chat-info">
+                    <div class="chat-top-row">
+                      <strong>{{ getOtherUser(chat).first_name }}</strong>
+                      <span class="chat-time">{{ chat.updated_at | date:'shortDate' }}</span>
+                    </div>
+                    <span class="listing-name">{{ chat.listing?.title }}</span>
+                    @if (chat.last_message) {
+                      <p class="last-message">{{ chat.last_message.content }}</p>
+                    }
+                  </div>
+                  @if (chat.unread_count > 0) {
+                    <span class="unread-count">{{ chat.unread_count }}</span>
+                  }
+                </button>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+}

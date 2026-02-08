@@ -1,0 +1,86 @@
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="header-content">
+      <div class="avatar">
+        @if (user()?.profile_image) {
+          <img [src]="user()!.profile_image" [alt]="getUserName()">
+        } @else {
+          <span>{{ getUserInitials() }}</span>
+        }
+      </div>
+      <div class="user-info">
+        <h1>{{ getUserName() }}</h1>
+        <p class="email">{{ user()?.email }}</p>
+        <p class="joined">Member since {{ getJoinedDate() }}</p>
+      </div>
+      <div class="header-actions">
+        <a routerLink="/settings" class="btn-settings">
+          <span class="icon">⚙️</span>
+          Edit Profile
+        </a>
+        <a routerLink="/create-listing" class="btn-create">
+          <span class="icon">+</span>
+          New Listing
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <div class="stats-cards">
+      <div class="stat-card">
+        <span class="stat-value">{{ activeListings().length }}</span>
+        <span class="stat-label">Active Listings</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ soldListings().length }}</span>
+        <span class="stat-label">Items Sold</span>
+      </div>
+    </div>
+
+    <div class="listings-section">
+      <div class="tabs">
+        <button 
+          class="tab"
+          [class.active]="activeTab() === 'selling'"
+          (click)="setTab('selling')">
+          Currently Selling ({{ activeListings().length }})
+        </button>
+        <button 
+          class="tab"
+          [class.active]="activeTab() === 'sold'"
+          (click)="setTab('sold')">
+          Sold Items ({{ soldListings().length }})
+        </button>
+      </div>
+
+      @if (isLoading()) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading your listings...</p>
+        </div>
+      } @else {
+        @if (getDisplayListings().length === 0) {
+          <div class="empty-state">
+            @if (activeTab() === 'selling') {
+              <span class="emoji">📦</span>
+              <h3>No active listings</h3>
+              <p>Start selling by creating your first listing!</p>
+              <a routerLink="/create-listing" class="btn-create">Create Listing</a>
+            } @else {
+              <span class="emoji">🏷️</span>
+              <h3>No sold items yet</h3>
+              <p>Items you've sold will appear here.</p>
+            }
+          </div>
+        } @else {
+          <div class="listings-grid">
+            @for (listing of getDisplayListings(); track listing.id) {
+              <app-listing-card [listing]="listing"></app-listing-card>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

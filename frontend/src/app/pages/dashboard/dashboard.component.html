@@ -1,0 +1,159 @@
+<div class="dashboard">
+  <!-- Hero Section with Search -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Find What You Need</h1>
+      <p>Buy and sell with fellow Gators</p>
+      
+      <div class="search-container">
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery"
+          placeholder="Search for textbooks, electronics, furniture..."
+          (keyup.enter)="search()">
+        <button class="search-btn" (click)="search()">
+          🔍 Search
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="categories-section">
+    <div class="categories-scroll">
+      <button 
+        class="category-chip" 
+        [class.active]="selectedCategory === null"
+        (click)="selectCategory(null)">
+        All
+      </button>
+      @for (category of categories(); track category.id) {
+        <button 
+          class="category-chip" 
+          [class.active]="selectedCategory === category.id"
+          (click)="selectCategory(category.id)">
+          {{ category.name }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Filters & Listings -->
+  <section class="main-section">
+    <aside class="filters-sidebar">
+      <div class="filter-header">
+        <h3>Filters</h3>
+        <button class="clear-btn" (click)="clearFilters()">Clear All</button>
+      </div>
+
+      <div class="filter-group">
+        <label>Price Range</label>
+        <div class="price-inputs">
+          <input 
+            type="number" 
+            [(ngModel)]="minPrice" 
+            placeholder="Min"
+            (change)="applyFilters()">
+          <span>-</span>
+          <input 
+            type="number" 
+            [(ngModel)]="maxPrice" 
+            placeholder="Max"
+            (change)="applyFilters()">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label>Condition</label>
+        <select [(ngModel)]="selectedCondition" (change)="applyFilters()">
+          @for (condition of conditions; track condition.value) {
+            <option [value]="condition.value">{{ condition.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select [(ngModel)]="sortBy" (change)="applyFilters()">
+          <option value="created_at">Date Listed</option>
+          <option value="price">Price</option>
+          <option value="views">Popularity</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Order</label>
+        <select [(ngModel)]="sortOrder" (change)="applyFilters()">
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+      </div>
+    </aside>
+
+    <main class="listings-area">
+      <div class="listings-header">
+        <span class="results-count">
+          @if (totalItems > 0) {
+            {{ totalItems }} listings found
+          } @else if (!isLoading()) {
+            No listings found
+          }
+        </span>
+      </div>
+
+      @if (isLoading()) {
+        <div class="loading-grid">
+          @for (i of [1,2,3,4,5,6,7,8]; track i) {
+            <div class="skeleton-card">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-content">
+                <div class="skeleton-title"></div>
+                <div class="skeleton-price"></div>
+              </div>
+            </div>
+          }
+        </div>
+      } @else if (listings().length === 0) {
+        <div class="empty-state">
+          <span class="empty-icon">📦</span>
+          <h3>No listings found</h3>
+          <p>Try adjusting your filters or search terms</p>
+        </div>
+      } @else {
+        <div class="listings-grid">
+          @for (listing of listings(); track listing.id) {
+            <app-listing-card [listing]="listing"></app-listing-card>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1) {
+          <div class="pagination">
+            <button 
+              class="page-btn" 
+              [disabled]="currentPage === 1"
+              (click)="changePage(currentPage - 1)">
+              ← Prev
+            </button>
+            
+            @for (page of getPageNumbers(); track page) {
+              <button 
+                class="page-btn" 
+                [class.active]="page === currentPage"
+                (click)="changePage(page)">
+                {{ page }}
+              </button>
+            }
+            
+            <button 
+              class="page-btn" 
+              [disabled]="currentPage === totalPages"
+              (click)="changePage(currentPage + 1)">
+              Next →
+            </button>
+          </div>
+        }
+      }
+    </main>
+  </section>
+</div>

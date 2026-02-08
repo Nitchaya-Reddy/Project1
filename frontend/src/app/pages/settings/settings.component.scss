@@ -1,0 +1,267 @@
+$primary-color: #fa4616;
+$secondary-color: #0021a5;
+
+.settings-page {
+  min-height: calc(100vh - 60px);
+  background: #f5f5f8;
+}
+
+.settings-header {
+  background: white;
+  border-bottom: 1px solid #eee;
+  padding: 2rem 1.5rem;
+
+  .header-content {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: $secondary-color;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.75rem;
+    color: #1a1a2e;
+  }
+
+  p {
+    margin: 0;
+    color: #666;
+  }
+}
+
+.settings-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  display: flex;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.settings-nav {
+  width: 240px;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+  }
+
+  .nav-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+    color: #333;
+
+    @media (max-width: 768px) {
+      white-space: nowrap;
+      margin-bottom: 0;
+    }
+
+    .icon {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background: #f9f9f9;
+    }
+
+    &.active {
+      background: $primary-color;
+      color: white;
+      border-color: $primary-color;
+    }
+  }
+}
+
+.settings-panel {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+
+  &.success {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.error {
+    background: #ffebee;
+    color: #c62828;
+  }
+}
+
+.panel-content {
+  padding: 2rem;
+
+  h2 {
+    margin: 0 0 0.25rem;
+    font-size: 1.25rem;
+    color: #333;
+  }
+
+  .panel-description {
+    margin: 0 0 1.5rem;
+    color: #666;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-size: 0.9rem;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+
+    &:disabled {
+      background: #f5f5f5;
+      color: #999;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .field-hint {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #999;
+  }
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+
+  .btn-save {
+    padding: 0.875rem 2rem;
+    background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($primary-color, 0.4);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.account-info {
+  background: #f9f9fb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #eee;
+    }
+
+    .label {
+      color: #666;
+    }
+
+    .value {
+      font-weight: 600;
+      color: #333;
+    }
+  }
+}
+
+.danger-zone {
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  p {
+    margin: 0 0 1rem;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .btn-logout {
+    padding: 0.75rem 1.5rem;
+    background: #f0f0f5;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #e0e0e5;
+    }
+  }
+}

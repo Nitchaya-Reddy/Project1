@@ -1,0 +1,119 @@
+<div class="register-page">
+  <div class="register-container">
+    <div class="register-header">
+      <div class="logo">
+        <span class="logo-icon">🐊</span>
+        <h1>UF Market</h1>
+      </div>
+      <p>Create your account</p>
+    </div>
+
+    <form (ngSubmit)="register()" class="register-form">
+      @if (error) {
+        <div class="error-message">
+          {{ error }}
+        </div>
+      }
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input 
+            type="text" 
+            id="firstName" 
+            [(ngModel)]="firstName" 
+            name="firstName"
+            placeholder="John"
+            [disabled]="isLoading">
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input 
+            type="text" 
+            id="lastName" 
+            [(ngModel)]="lastName" 
+            name="lastName"
+            placeholder="Doe"
+            [disabled]="isLoading">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">UF Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          [(ngModel)]="email" 
+          name="email"
+          placeholder="yourname@ufl.edu"
+          [disabled]="isLoading">
+        <span class="hint">Must be a valid &#64;ufl.edu email</span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="password" 
+          name="password"
+          placeholder="At least 6 characters"
+          [disabled]="isLoading">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input 
+          type="password" 
+          id="confirmPassword" 
+          [(ngModel)]="confirmPassword" 
+          name="confirmPassword"
+          placeholder="Confirm your password"
+          [disabled]="isLoading">
+      </div>
+
+      <button type="submit" class="btn-register" [disabled]="isLoading">
+        @if (isLoading) {
+          <span>Creating account...</span>
+        } @else {
+          <span>Create Account</span>
+        }
+      </button>
+    </form>
+
+    <div class="register-footer">
+      <p>Already have an account? <a routerLink="/login">Sign in</a></p>
+    </div>
+  </div>
+
+  <div class="register-hero">
+    <div class="hero-content">
+      <h2>Join UF Market</h2>
+      <p>Connect with thousands of Gators buying and selling on campus!</p>
+      <div class="features">
+        <div class="feature">
+          <span>🔒</span>
+          <div>
+            <strong>Secure</strong>
+            <p>UF email verification</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span>⚡</span>
+          <div>
+            <strong>Fast</strong>
+            <p>List items in seconds</p>
+          </div>
+        </div>
+        <div class="feature">
+          <span>🤝</span>
+          <div>
+            <strong>Local</strong>
+            <p>Campus meetups</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
