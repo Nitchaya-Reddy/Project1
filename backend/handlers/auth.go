@@ -30,7 +30,21 @@ type AuthResponse struct {
 func Register(c *gin.Context) {
 	var input RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// Parse validation errors for better messages
+		errorMsg := err.Error()
+		if strings.Contains(errorMsg, "Email") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Please enter a valid email address"})
+			return
+		}
+		if strings.Contains(errorMsg, "Password") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Password must be at least 6 characters"})
+			return
+		}
+		if strings.Contains(errorMsg, "FirstName") || strings.Contains(errorMsg, "LastName") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "First name and last name are required"})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please fill in all required fields"})
 		return
 	}
 
@@ -43,7 +57,7 @@ func Register(c *gin.Context) {
 	// Check if user already exists
 	var existingUser models.User
 	if result := database.DB.Where("email = ?", input.Email).First(&existingUser); result.Error == nil {
-		c.JSON(http.StatusConflict, gin.H{"error": "Email already registered"})
+		c.JSON(http.StatusConflict, gin.H{"error": "An account with this email already exists. Please login or use a different email."})
 		return
 	}
 
@@ -83,18 +97,27 @@ func Register(c *gin.Context) {
 func Login(c *gin.Context) {
 	var input LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errorMsg := err.Error()
+		if strings.Contains(errorMsg, "Email") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Please enter a valid email address"})
+			return
+		}
+		if strings.Contains(errorMsg, "Password") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Password is required"})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please enter email and password"})
 		return
 	}
 
 	var user models.User
 	if result := database.DB.Where("email = ?", strings.ToLower(input.Email)).First(&user); result.Error != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password. Please try again."})
 		return
 	}
 
 	if !utils.CheckPassword(input.Password, user.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password. Please try again."})
 		return
 	}
 

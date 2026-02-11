@@ -30,7 +30,10 @@ func main() {
 	if allowedOrigins != "" {
 		config.AllowOrigins = strings.Split(allowedOrigins, ",")
 	} else {
-		config.AllowOrigins = []string{"http://localhost:4200", "http://localhost:3000"}
+		// Allow all localhost ports for development
+		config.AllowOriginFunc = func(origin string) bool {
+			return strings.HasPrefix(origin, "http://localhost:")
+		}
 	}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}

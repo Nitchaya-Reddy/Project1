@@ -52,11 +52,26 @@ $secondary-color: #0021a5;
     gap: 1rem;
 
     .error-message {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       background: #ffebee;
       color: #c62828;
-      padding: 0.75rem 1rem;
+      padding: 0.875rem 1rem;
       border-radius: 8px;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
+      border-left: 4px solid #c62828;
+      animation: shake 0.5s ease-in-out;
+
+      .error-icon {
+        font-size: 1.1rem;
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
 
     .form-row {

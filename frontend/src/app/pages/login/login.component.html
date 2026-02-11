@@ -11,7 +11,8 @@
     <form (ngSubmit)="login()" class="login-form">
       @if (error) {
         <div class="error-message">
-          {{ error }}
+          <span class="error-icon">⚠️</span>
+          <span>{{ error }}</span>
         </div>
       }
 

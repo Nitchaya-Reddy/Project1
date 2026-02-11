@@ -22,22 +22,37 @@ export class LoginComponent {
   isLoading = false;
 
   login(): void {
-    if (!this.email || !this.password) {
-      this.error = 'Please fill in all fields';
+    this.error = '';
+
+    if (!this.email.trim()) {
+      this.error = 'Email is required';
+      return;
+    }
+
+    if (!this.password) {
+      this.error = 'Password is required';
       return;
     }
 
     this.isLoading = true;
-    this.error = '';
 
-    this.authService.login({ email: this.email, password: this.password }).subscribe({
+    this.authService.login({ email: this.email.trim().toLowerCase(), password: this.password }).subscribe({
       next: () => {
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.router.navigateByUrl(returnUrl);
       },
       error: (err) => {
         this.isLoading = false;
-        this.error = err.error?.error || 'Login failed';
+        const errorMessage = err.error?.error;
+        if (errorMessage) {
+          this.error = errorMessage;
+        } else if (err.status === 0) {
+          this.error = 'Unable to connect to server. Please try again.';
+        } else if (err.status === 401) {
+          this.error = 'Invalid email or password.';
+        } else {
+          this.error = 'Login failed. Please try again.';
+        }
       }
     });
   }
